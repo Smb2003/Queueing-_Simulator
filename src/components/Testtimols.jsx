@@ -9,11 +9,11 @@ import TestimalContent from './TestimalContent';
 
 export default function Testtimols() {
     const testimonials = [
-        { name: 'Ahmed Khan', position: 'CEO, Ziauddin Hospital', comment: 'The simulation tool has transformed how we model and analyze complex scenarios. Highly effective and intuitive!' },
-        { name: 'Fatima Noor', position: 'CEO, AGA Khan Hospital', comment: 'We\'ve been utilizing the simulator for over a year, and it has greatly improved our decision-making processes by providing accurate results.' },
-        { name: 'Aisha Siddiqui', position: 'CEO, Liaquat National Hospital', comment: 'An outstanding simulator that helps us predict outcomes and streamline our workflow efficiently.' },
-        { name: 'Omar Farooq', position: 'CEO, Tabba Heart Hospital', comment: 'This simulator simplifies the analysis of critical operations. A powerful tool for any organization looking to enhance their processes.' },
-        { name: 'Hassan Ali', position: 'Director, National Institute of Technology', comment: 'The simulator has become an indispensable part of our training sessions. Its realism and accuracy are unparalleled.' },
+        { name: 'Ahmed Khan', position: 'XYZ Hospital', comment: 'The simulation tool has transformed how we model and analyze complex scenarios. Highly effective and intuitive!' },
+        { name: 'Fatima Noor', position: 'XYZ Hospital', comment: 'We\'ve been utilizing the simulator for over a year, and it has greatly improved our decision-making processes by providing accurate results.' },
+        { name: 'Aisha Siddiqui', position: 'XYZ Hospital', comment: 'An outstanding simulator that helps us predict outcomes and streamline our workflow efficiently.' },
+        { name: 'Omar Farooq', position: 'XYZ Hospital', comment: 'This simulator simplifies the analysis of critical operations. A powerful tool for any organization looking to enhance their processes.' },
+        { name: 'Hassan Ali', position: 'XYZ Hospital', comment: 'The simulator has become an indispensable part of our training sessions. Its realism and accuracy are unparalleled.' },
     ];
     
     
