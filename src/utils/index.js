@@ -79,6 +79,8 @@ function generateCummulativeProbability(meanArrivalNumber, meanServiceNumber,sel
 
     const totalServiceTime = serviceTime.reduce((a, b) => a + b, 0);
     const serverUtilization = (totalServiceTime / totalServiceTime) * 100;
+    
+    let avgValues = avgPerformanceMeasures(turnAroundTime,waitingTime,responseTime);
 
     for (let i = 0; i < arrivalTime.length; i++) {
         table.push({
@@ -108,7 +110,8 @@ function generateCummulativeProbability(meanArrivalNumber, meanServiceNumber,sel
         serverUtilization,
         priority,
         table,
-        ganttChart
+        ganttChart,
+        avgValues
     };   
 }
 
@@ -304,4 +307,16 @@ function calculateSchedule(arrivalTimes, serviceTimes, priorities) {
   }
 
   return mergedGanttChart;
+}
+
+
+const avgPerformanceMeasures = (TAT,WT,RT) => {
+  console.log(TAT.length)
+  const totalTAT = TAT.reduce((a, b) => a + b, 0);
+  const avgTAT = +(totalTAT/TAT.length).toFixed(2);
+  const totalWT = WT.reduce((a, b) => a + b, 0);
+  const avgWT = +(totalWT/WT.length).toFixed(2);
+  const totalRT = RT.reduce((a, b) => a + b, 0);
+  const avgRT = +(totalRT/RT.length).toFixed(2);
+  return {avgTAT,avgWT,avgRT};
 }

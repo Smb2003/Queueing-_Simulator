@@ -49,7 +49,7 @@ function calculateGGC(meanArrival, meanService,ArrivalVariance,ServiceVariance, 
   };
 }
 else{
-      console.log("This is not queuing model..");
+    return {rho}
   }
 }
 const StyledTableCell = styled(TableCell)(() => ({
@@ -87,7 +87,6 @@ const QueueGGC = () => {
         const {ArrivalTime,ServiceTime,ArrivalVariance,ServiceVariance,Servers} = formdata;
         const model = calculateGGC(ArrivalTime,ServiceTime,ArrivalVariance,ServiceVariance,Servers);
         setData({
-          ...data,
           ...model
         })
     }
@@ -291,8 +290,16 @@ const QueueGGC = () => {
         </div>
         <Box className="px-3 py-[10vw]">  
         {
-          (Object.keys(data).length === 0) ?
-           null
+          (Object.keys(data).length === 0)?
+          null
+          :
+          (Object.keys(data).length === 1) ?
+           <div className='flex items-center justify-center'>
+            <div className='border-1 border p-2 rounded-lg border-emerald-200'>
+            <h1 className='text-center font-mono font-bold text-xl text-emerald-950'>{`Rho (${data.rho}) is greater than 1. It's not a model.`}</h1>
+
+            </div>
+           </div>
           :
             <>
               <TableContainer component={Paper} sx={{

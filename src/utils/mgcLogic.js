@@ -88,7 +88,7 @@ function generateCummulativeProbability(meanArrivalNumber, minServiceNumber,maxS
     return (serviceTime / totalServiceTime) * 100;
   });
   
-
+  let avgValues = avgPerformanceMeasures(turnAroundTime,waitingTime,responseTime);
   for (let i = 0; i < arrivalTime.length; i++) {
       table.push({
           arrivalTime: arrivalTime[i],
@@ -119,7 +119,7 @@ function generateCummulativeProbability(meanArrivalNumber, minServiceNumber,maxS
       table,
       serverCount,
       ganttCharts,
-
+      avgValues
   };
 }
 
@@ -329,3 +329,15 @@ function calculateMultiServerSchedule(arrivalTimes, serviceTimes, priorities, nu
   
     return { ganttCharts, mergedCombinedChart };
   }
+
+  
+const avgPerformanceMeasures = (TAT,WT,RT) => {
+  console.log(TAT.length)
+  const totalTAT = TAT.reduce((a, b) => a + b, 0);
+  const avgTAT = +(totalTAT/TAT.length).toFixed(2);
+  const totalWT = WT.reduce((a, b) => a + b, 0);
+  const avgWT = +(totalWT/WT.length).toFixed(2);
+  const totalRT = RT.reduce((a, b) => a + b, 0);
+  const avgRT = +(totalRT/RT.length).toFixed(2);
+  return {avgTAT,avgWT,avgRT};
+}

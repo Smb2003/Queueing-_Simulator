@@ -3,7 +3,8 @@ import Box from '@mui/material/Box';
 import { filledInputClasses } from '@mui/material/FilledInput';
 import MenuItem from '@mui/material/MenuItem';
 import { InputAdornment, inputBaseClasses, Paper, styled, Table, TableBody, TableCell, tableCellClasses, TableContainer, TableHead, TablePagination, TableRow, TextField } from '@mui/material';
-import generateCummulativeProbabitiy from '../../utils/mgcLogic'
+import generateCummulativeProbabitiy from '../../utils/mmcLogic'
+import { useNavigate } from 'react-router-dom';
 
 
 const StyledTableCell = styled(TableCell)(() => ({
@@ -40,21 +41,23 @@ const selectPriority = [
 const MGC = () => {
     const [formdata,setFormData] = useState({});
     const [data,setData] = useState(null);
-    
+    const navigate = useNavigate();
+
     const handleSubmit = (field,val) => {
         setFormData({...formdata,
             [field]:val
         })
     }
-
-    
     const Submit = (e) => {
         e.preventDefault();
-        const result = generateCummulativeProbabitiy(formdata.ArrivalTime,formdata.minServiceTime,formdata.maxServiceTime,formdata.Servers,formdata.Priority);
+        const result = generateCummulativeProbabitiy(formdata.ArrivalTime,formdata.ServiceTime,formdata.Servers,formdata.Priority);
         setData(result);
-        console.log(data);
     }
+    console.log(data);
     
+    const goToChartPage = () =>{
+      navigate('/Graphs', {state:data})
+    }
   return (
     <div className='  w-full h-screen'>
         <div className=' flex justify-around items-center py-[2vw] px-[3vw]  '>
@@ -62,7 +65,6 @@ const MGC = () => {
                 component="form"
                 noValidate
                 autoComplete="off"
-                sx={{display:{md:'flex'} ,width: {md:"100%"}}}
             >
                 <TextField
                   id="filled-suffix-shrink"
@@ -70,7 +72,7 @@ const MGC = () => {
                   variant="filled"
                   sx={{
                     marginX: {md:"1vw" ,xs: '4vw'},
-                    width:{xs:"90%",md:'16%'},
+                    width:{xs:"90%",md:'20%'},
                     marginY: {md:"1vw" ,xs: '4vw'},
                   }}
                   InputProps={{
@@ -103,11 +105,11 @@ const MGC = () => {
                 />
                 <TextField
                   id="filled-suffix-shrink"
-                  label="Min Service Time"
+                  label="Service Time"
                   variant="filled"
                   sx={{
                     marginX: {md:"1vw" ,xs: '4vw'},
-                    width:{xs:"90%",md:'16%'},
+                    width:{xs:"90%",md:'20%'},
                     marginY: {md:"1vw" ,xs: '4vw'},
                   }}
                   InputProps={{
@@ -136,44 +138,7 @@ const MGC = () => {
                       </InputAdornment>
                     ),
                   }}
-                  onChange={(e) => handleSubmit("minServiceTime", e.target.value)}
-                />
-                <TextField
-                  id="filled-suffix-shrink"
-                  label="Max Service Time"
-                  variant="filled"
-                  sx={{
-                    marginX: {md:"1vw" ,xs: '4vw'},
-                    width:{xs:"90%",md:'16%'},
-                    marginY: {md:"1vw" ,xs: '4vw'},
-                  }}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment
-                        position="start"
-                        sx={{
-                          display: "flex",
-                          alignItems: "start",
-                          justifyContent: "end",
-                          opacity: 0,
-                          pointerEvents: "none",
-                          width: "fit-content",
-                          [`.${filledInputClasses.root} &`]: {
-                            margin: 0,
-                            width:"1vw",
-
-                          },
-                          [`[data-shrink=true] ~ .${inputBaseClasses.root} > &`]: {
-                            opacity: 1,
-                            width:"1vw",
-                          },
-                        }}
-                      >
-                        Number
-                      </InputAdornment>
-                    ),
-                  }}
-                  onChange={(e) => handleSubmit("maxServiceTime", e.target.value)}
+                  onChange={(e) => handleSubmit("ServiceTime", e.target.value)}
                 />
                 <TextField
                   id="filled-suffix-shrink"
@@ -181,7 +146,7 @@ const MGC = () => {
                   variant="filled"
                   sx={{
                     marginX: {md:"1vw" ,xs: '4vw'},
-                    width:{xs:"90%",md:'16%'},
+                    width:{xs:"90%",md:'20%'},
                     marginY: {md:"1vw" ,xs: '4vw'},
                   }}
                   InputProps={{
@@ -219,7 +184,7 @@ const MGC = () => {
                   label="Priority"
                   sx={{
                     marginX: {md:"1vw" ,xs: '4vw'},
-                    width:{xs:"90%",md:'12%'},
+                    width:{xs:"90%",md:'14%'},
                     marginY: {md:"1vw" ,xs: '4vw'},
                   }}
                   defaultValue="0"
@@ -232,9 +197,7 @@ const MGC = () => {
                     </MenuItem>
                   ))}
                </TextField>
-               <div className='flex'>
-                <button className='md:w-[10vw] w-full py-4 md:h-[4.4vw] px-2  md:mx-[1vw] md:my-[1vw] rounded-md bg-emerald-800 text-white active:scale-95 hover:bg-emerald-600 text-md' onClick={Submit}>Calculate</button>
-               </div>
+                <button className='md:w-[10vw] w-full md:h-[4.4vw] py-4 px-2 md:ml-7 md:mx-[2vw] md:my-[1vw] rounded-md bg-emerald-800 text-white active:scale-95 hover:bg-emerald-600 text-md' onClick={Submit}>Calculate</button>
             </Box>
         </div>
         <Box className="mx-3">
@@ -283,7 +246,7 @@ const MGC = () => {
                 </div>
                 </TableContainer>
                 <div className="flex flex-wrap my-[2vw] mx-[1vw] justify-center">
-                  <div className="flex flex-wrap justify-center items-center w-full">
+                  <div className="flex flex-wrap items-center justify-center w-full">
                     {data?.ganttCharts?.length !== 0 ? (
                       data.ganttCharts.map((chart, chartIndex) => (
                         <div
@@ -324,10 +287,10 @@ const MGC = () => {
                       <p>No Gantt chart data available.</p>
                     )}
                   </div>
-                </div>
+                </div>    
                 <h4 style={{
                   margin: '2em auto',
-                  paddingBottom:"5vw",
+                  paddingBottom:'10px',
                   textAlign: 'center',
                   fontSize: '22px',
                   fontWeight: 'bold'
@@ -341,6 +304,47 @@ const MGC = () => {
                   }
                     
                 </h4>
+                <div className='m-2'>
+                  <h1 style={{
+                  margin: '0.2em auto',
+                  paddingBottom:'15px',
+                  textAlign: 'center',
+                  fontSize: '22px',
+                  fontWeight: 'bold'
+                }}>Performance Measures</h1>
+                 {
+                  data?.avgValues ?
+                 
+                  <TableContainer component={Paper} sx={{
+                    maxWidth: '1200px', margin: 'auto'
+                    }}>
+                    <div className='md:overflow-hidden  overflow-scroll'>
+
+                        <Table sx={{ minWidth: 700 }} aria-label="customized table">
+                        <TableHead>
+                          <TableRow>
+                            <StyledTableCell align="center">Avg TurnAround Time(TAT)</StyledTableCell>
+                            <StyledTableCell align="center">Avg Waiting Time(WT)</StyledTableCell>
+                            <StyledTableCell align="center">Avg Response Time(RST)</StyledTableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          <StyledTableRow >
+                            <StyledTableCell align="center">{data?.avgValues?.avgTAT}</StyledTableCell>
+                            <StyledTableCell align="center">{data?.avgValues?.avgWT}</StyledTableCell>
+                            <StyledTableCell align="center">{data?.avgValues?.avgRT}</StyledTableCell>
+                          </StyledTableRow>
+                        </TableBody>
+                      </Table>
+                    </div>
+                    </TableContainer>
+                    :
+                    null
+                    }
+                </div>
+                <div className='flex justify-center p-2'>
+                  <button className='px-5 py-4 rounded-md bg-[#065F46] text-white' onClick={()=>{goToChartPage()}}>Chart Analysis</button>
+                </div>
             </>
 
             : null

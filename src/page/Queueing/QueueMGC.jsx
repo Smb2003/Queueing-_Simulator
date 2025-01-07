@@ -46,6 +46,7 @@ const calculateMGC = (meanArrivalTime, minServiceTime,maxServiceTime,servers) =>
     }
   }else{
       console.log("This is not queuing model..");
+      return {rho};
   }
 }
 const StyledTableCell = styled(TableCell)(() => ({
@@ -82,11 +83,12 @@ const QueueMGC = () => {
         e.preventDefault();
         const {ArrivalTime,MinServiceTime,MaxServiceTime,Servers} = formdata;
         const model = calculateMGC(ArrivalTime,MinServiceTime,MaxServiceTime,Servers);
+        console.log("model",model)
         setData({
-          ...data,
           ...model
         })
-    }
+        console.log(data);
+      }
   return (
     <div className='  w-full h-screen'>
         <div className='flex flex-col md:flex-row justify-center items-center md:justify-around'>
@@ -251,8 +253,16 @@ const QueueMGC = () => {
         </div>
         <Box className="px-3 py-[10vw]">  
         {
-          (Object.keys(data).length === 0) ?
-           null
+          (Object.keys(data).length === 0)? 
+          null
+          :
+          (Object.keys(data).length === 1) ?
+           <div className='flex items-center justify-center'>
+            <div className='border-1 border p-2 rounded-lg border-emerald-200'>
+            <h1 className='text-center font-mono font-bold text-xl text-emerald-950'>{`Rho (${data.rho}) is greater than 1. It's not a model.`}</h1>
+
+            </div>
+           </div>
           :
             <>
               <TableContainer component={Paper} sx={{

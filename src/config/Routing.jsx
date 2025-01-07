@@ -10,6 +10,7 @@ import QueueMGC from '../page/Queueing/QueueMGC'
 import QueueGGC from '../page/Queueing/QueueGGC'
 import QueueMMC from '../page/Queueing/QueueMMC'
 import MGC from '../page/Simulation/MGC'
+import Graphs from '../page/Simulation/Graphs'
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -27,6 +28,7 @@ const router = createBrowserRouter(
           <Route path='mgcModel' element={<QueueMGC/>}/>
           <Route path='ggcModel' element={<QueueGGC/>}/>
         </Route>
+          <Route path='Graphs' element={<Graphs/>}/>
       </Route>
     </Route>
   )

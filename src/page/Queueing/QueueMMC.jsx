@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import Box from '@mui/material/Box';
-import MenuItem from '@mui/material/MenuItem';
 import { filledInputClasses } from '@mui/material/FilledInput';
 import { InputAdornment, inputBaseClasses, Paper, styled, Table, TableBody, TableCell, tableCellClasses, TableContainer, TableHead, TablePagination, TableRow, TextField } from '@mui/material';
 
@@ -26,21 +25,26 @@ function calculateMMC(meanArrival, meanService, servers) {
   meanService = 1 / Number(meanService);
   servers = Number(servers);
 
-  const rho = meanArrival / (servers * meanService);
-  const idle = Number((1 - rho).toFixed(2)); 
-  const Lq = Number(((calculatePo(servers, rho)*Math.pow((meanArrival/meanService),servers)*rho)/(factorial(servers)*Math.pow(1-rho, 2))).toFixed(1));
-  const Wq = Number((Lq / meanArrival).toFixed(2));
-  const Ws = Number((Wq + (1/meanService)).toFixed(2));
-  const Ls = Number(((meanArrival*Ws)).toFixed(2));
-
-  return {
-    rho,
-    idle,
-    Wq,
-    Lq,
-    Ws,
-    Ls
-  };
+  const rho = Number((meanArrival / (servers * meanService)).toFixed(2));
+  if(rho < 1){
+    const idle = Number((1 - rho).toFixed(2)); 
+    const Lq = Number(((calculatePo(servers, rho)*Math.pow((meanArrival/meanService),servers)*rho)/(factorial(servers)*Math.pow(1-rho, 2))).toFixed(1));
+    const Wq = Number((Lq / meanArrival).toFixed(2));
+    const Ws = Number((Wq + (1/meanService)).toFixed(2));
+    const Ls = Number(((meanArrival*Ws)).toFixed(2));
+  
+    return {
+      rho,
+      idle,
+      Wq,
+      Lq,
+      Ws,
+      Ls
+    };
+  }
+  else{
+    return {rho}
+  }
 }
 
 const StyledTableCell = styled(TableCell)(() => ({
@@ -79,7 +83,6 @@ const QueueMMC = () => {
         const {ArrivalTime,ServiceTime,Servers} = formdata;
         const model = calculateMMC(ArrivalTime,ServiceTime,Servers);
         setData({
-          ...data,
           ...model
         })
     }
@@ -205,9 +208,17 @@ const QueueMMC = () => {
         </div>
         <Box className="px-3 py-[10vw]">
         {
-           (Object.keys(data).length === 0) ?
-           null
-          :
+            (Object.keys(data).length === 0)?
+            null
+            :
+            (Object.keys(data).length === 1) ?
+             <div className='flex items-center justify-center'>
+              <div className='border-1 border p-2 rounded-lg border-emerald-200'>
+              <h1 className='text-center font-mono font-bold text-xl text-emerald-950'>{`Rho (${data.rho}) is greater than 1. It's not a model.`}</h1>
+  
+              </div>
+             </div>
+            :
             <>
               <TableContainer component={Paper} sx={{
                 maxWidth: '1200px', margin: 'auto'
