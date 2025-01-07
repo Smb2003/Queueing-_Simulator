@@ -53,6 +53,7 @@ const MMC = () => {
         const result = generateCummulativeProbabitiy(formdata.ArrivalTime,formdata.ServiceTime,formdata.Servers,formdata.Priority);
         setData(result);
     }
+    console.log(data);
     
   return (
     <div className='  w-full h-screen'>

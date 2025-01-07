@@ -52,6 +52,7 @@ const MGC = () => {
         e.preventDefault();
         const result = generateCummulativeProbabitiy(formdata.ArrivalTime,formdata.minServiceTime,formdata.maxServiceTime,formdata.Servers,formdata.Priority);
         setData(result);
+        console.log(data);
     }
     
   return (

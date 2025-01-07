@@ -50,7 +50,7 @@ const StyledTableCell = styled(TableCell)(() => ({
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
-    // border: 1,
+    
   },
 }));
 
@@ -95,7 +95,7 @@ const QueueMMC = () => {
                 className="w-full md:flex md:py-5 md:px-6"
             >
                 <TextField
-                    // id="filled-suffix-shrink"
+                    
                     label="Arrival Time"
                     variant="filled"
                     onChange={(e)=>handleSubmit("ArrivalTime",e.target.value)}
@@ -114,7 +114,7 @@ const QueueMMC = () => {
                             opacity: 0,
                             pointerEvents: 'none',
                             [`.${filledInputClasses.root} &`]: {
-                                // marginBottom: '7.5px',
+                                
                                 borderRadius: '20px',
                             },
                             [`[data-shrink=true] ~ .${inputBaseClasses.root} > &`]: {
@@ -130,7 +130,7 @@ const QueueMMC = () => {
                     }}
                 />
                 <TextField
-                    // id="filled-suffix-shrink"
+                    
                     label="Service Time"
                     sx={{
                       marginX: {md:"1vw" ,xs: '4vw'},
@@ -149,7 +149,7 @@ const QueueMMC = () => {
                             opacity: 0,
                             pointerEvents: 'none',
                             [`.${filledInputClasses.root} &`]: {
-                                // marginBottom: '7.5px',
+                                
                                 borderRadius: '20px'
                             },
                             [`[data-shrink=true] ~ .${inputBaseClasses.root} > &`]: {

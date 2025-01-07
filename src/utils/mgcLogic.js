@@ -22,7 +22,6 @@ function factorial(n) {
 }
 
 function generateCummulativeProbability(meanArrivalNumber, minServiceNumber,maxServiceNumber,serverCount=1, selectedPriority=0) {
-  // Reset all arrays to avoid stale data
   cummulativeProbabilities = [];
   cpLookUp = [];
   interArrival = [];
@@ -50,7 +49,6 @@ function generateCummulativeProbability(meanArrivalNumber, minServiceNumber,maxS
       x += 1;
   }
 
-  // Generate service times
   for (let i = 0; i < cummulativeProbabilities.length; i++) {
       let result = Math.round((+minServiceNumber + (+maxServiceNumber - +minServiceNumber)* Math.random()));
       while (result < 1) {
@@ -58,26 +56,16 @@ function generateCummulativeProbability(meanArrivalNumber, minServiceNumber,maxS
       }
       serviceTime.push(result);
   }
-
-  // Calling CP Lookup Table
-//   CP_LookUp(cummulativeProbabilities);
-
-  // Generate minimum number of arrivals
-//   genMinNoOfArrival();
-
-  // Calling Priority Generator
   if (selectedPriority === 1) {
       PriorityGeneration(55, 1994, 9, 10112166, cummulativeProbabilities.length, 1, 3);
   }
 
-  // Generate inter-arrival times
   interArrival[0] = 0;
   for (let i = 1; i < cummulativeProbabilities.length; i++) {
       const result = generateInterArrival(meanArrivalNumber);
       interArrival.push(result);
   }
 
-  // Generate arrival times
   for (let i = 0; i < interArrival.length; i++) {
       arrivalTime.push(i === 0 ? 0 : arrivalTime[i - 1] + interArrival[i]);
   }
@@ -86,19 +74,15 @@ function generateCummulativeProbability(meanArrivalNumber, minServiceNumber,maxS
   const {mergedCombinedChart,ganttCharts } = gantChart;
 
 
-  // Calculate performance measures
   performanceMeasures(arrivalTime, serviceTime, mergedCombinedChart, selectedPriority);
  
   const totalServiceTime = serviceTime.reduce((a, b) => a + b, 0);
   const serverTotalServiceTime = ganttCharts.map(serverTasks => {
     return serverTasks.reduce((total, task) => total + (task.end_Time - task.start_Time), 0);
   });
-  // Step 2: Calculate total available time for each server (assuming it's the max end time of tasks)
   const serverTotalAvailableTime = ganttCharts.map(serverTasks => {
     return Math.max(...serverTasks.map(task => task.end_Time));
   });
-  
-  // Step 3: Calculate utilization for each server
   const serverUtilization = serverTotalServiceTime.map((serviceTime, index) => {
     const availableTime = serverTotalAvailableTime[index];
     return (serviceTime / totalServiceTime) * 100;
@@ -118,7 +102,6 @@ function generateCummulativeProbability(meanArrivalNumber, minServiceNumber,maxS
       });
   }
 
-  // Return all arrays and computed values
   return {
       cummulativeProbabilities,
       cpLookUp,
@@ -136,21 +119,10 @@ function generateCummulativeProbability(meanArrivalNumber, minServiceNumber,maxS
       table,
       serverCount,
       ganttCharts,
-      // serverSchedules
+
   };
 }
-// function CP_LookUp(cummulativeProbabilities) {
-//       cpLookUp[0] = 0;
-//       for (let i = 0; i < cummulativeProbabilities.length - 1; i++) {
-//           cpLookUp.push(cummulativeProbabilities[i]);
-//       }
-//   }
-  
-//   function genMinNoOfArrival() {
-//       for (let i = 0; i < cummulativeProbabilities.length; i++) {
-//           minNoOfArrival.push(i);
-//       }
-//   }
+
   
   function generateInterArrival(lambda) {
    let result = Math.round(-lambda * Math.log(Math.random()));
@@ -167,44 +139,40 @@ function generateCummulativeProbability(meanArrivalNumber, minServiceNumber,maxS
       let processedCustomersStart = new Set();
       let processedCustomersEnd = new Set();
   
-      // Initialize arrays to ensure alignment with all customers
       startTime = Array(arrivalTime.length).fill(null);
       endingTime = Array(arrivalTime.length).fill(null);
       turnAroundTime = [];
       waitingTime = [];
       responseTime = [];
   
-      // Filter ganttChart entries for all priorities (1, 2, 3)
       console.log("pfGantChart",ganttChart);
       const filteredGanttChart = ganttChart.filter(entry => 
         entry.priority === 1 || entry.priority === 2 || entry.priority === 3
       );
-      // console.log("FIltered",filteredGanttChart)
-      // Process Start Time
+
       filteredGanttChart.forEach((entry) => {
         if (!processedCustomersStart.has(entry.customer_Id)) {
-          startTime[entry.customer_Id] = entry.start_Time; // Store start time based on customer_Id
+          startTime[entry.customer_Id] = entry.start_Time; 
           processedCustomersStart.add(entry.customer_Id);
         }
       });
   
-      // Process End Time in reverse order
       for (let i = filteredGanttChart.length - 1; i >= 0; i--) {
         let entry = filteredGanttChart[i];
         if (!processedCustomersEnd.has(entry.customer_Id)) {
-          endingTime[entry.customer_Id] = entry.end_Time; // Store end time based on customer_Id
+          endingTime[entry.customer_Id] = entry.end_Time; 
           processedCustomersEnd.add(entry.custome_Id);
         }
       }
   
-      // Calculate Turnaround Time, Waiting Time, and Response Time
+      
       for (let i = 0; i < arrivalTime.length; i++) {
         if (startTime[i] !== null && endingTime[i] !== null) { 
-          turnAroundTime.push(endingTime[i] - arrivalTime[i]); // TAT = End Time - Arrival Time
-          waitingTime.push(turnAroundTime[i] - serviceTime[i]); // WT = TAT - Service Time
-          responseTime.push(startTime[i] - arrivalTime[i]); // RT = Start Time - Arrival Time
+          turnAroundTime.push(endingTime[i] - arrivalTime[i]); 
+          waitingTime.push(turnAroundTime[i] - serviceTime[i]); 
+          responseTime.push(startTime[i] - arrivalTime[i]); 
         } else {
-          turnAroundTime.push(null); // For missing customers, push null
+          turnAroundTime.push(null); 
           waitingTime.push(null);
           responseTime.push(null);
         }
@@ -244,24 +212,24 @@ function generateCummulativeProbability(meanArrivalNumber, minServiceNumber,maxS
   }
 
 function calculateMultiServerSchedule(arrivalTimes, serviceTimes, priorities, numServers) {
-    const ganttCharts = Array.from({ length: numServers }, () => []); // Separate Gantt chart for each server
-    const combinedGanttChart = []; // Combined Gantt chart
-    const queue = []; // Priority queue
-    const serverEndTimes = Array(numServers).fill(0); // Tracks when each server will be free
+    const ganttCharts = Array.from({ length: numServers }, () => []); 
+    const combinedGanttChart = []; 
+    const queue = []; 
+    const serverEndTimes = Array(numServers).fill(0); 
     let currentTime = 0;
   
-    // Create customers array
+    
     const customers = arrivalTimes.map((arrival, index) => ({
       id: index,
       arrivalTime: arrival,
       serviceTime: serviceTimes[index],
       priority: priorities[index],
     }));
-    // console.log(customers)
-    // Sort customers by arrival time
+    
+    
     customers.sort((a, b) => a.arrivalTime - b.arrivalTime);
   
-    // Function to add customers to the queue when they arrive
+    
     const addToQueue = (currentTime) => {
       customers.forEach((customer) => {
         if (
@@ -273,7 +241,7 @@ function calculateMultiServerSchedule(arrivalTimes, serviceTimes, priorities, nu
         }
       });
   
-      // Sort the queue by priority (ascending) and arrival time
+      
       queue.sort((a, b) =>
         a.priority === b.priority
           ? a.arrivalTime - b.arrivalTime
@@ -295,7 +263,7 @@ function calculateMultiServerSchedule(arrivalTimes, serviceTimes, priorities, nu
             .map((c) => c.arrivalTime),
           ...serverEndTimes.filter((time) => time > currentTime)
         );
-        if (nextEventTime === Infinity) break; // No more events
+        if (nextEventTime === Infinity) break; 
         currentTime = nextEventTime;
         continue;
       }
@@ -306,7 +274,7 @@ function calculateMultiServerSchedule(arrivalTimes, serviceTimes, priorities, nu
         if (currentTime >= serverEndTimes[serverIndex]) {
           const currentCustomer = queue.shift();
   
-          // Serve the current customer
+          
           const serviceDuration = currentCustomer.serviceTime;
           const startTime = currentTime;
           const endTime = currentTime + serviceDuration;
@@ -331,7 +299,7 @@ function calculateMultiServerSchedule(arrivalTimes, serviceTimes, priorities, nu
         }
       }
   
-      // Advance time to the next earliest event (if no progress is made)
+      
       const nextEventTime = Math.min(
         ...customers
           .filter((c) => c.serviceTime > 0)
@@ -342,7 +310,7 @@ function calculateMultiServerSchedule(arrivalTimes, serviceTimes, priorities, nu
       currentTime = Math.max(currentTime + 1, nextEventTime);
     }
   
-    // Merge consecutive entries for the same customer in the combined Gantt chart
+    
     const mergedCombinedChart = [];
     for (let i = 0; i < combinedGanttChart.length; i++) {
       const current = combinedGanttChart[i];

@@ -56,7 +56,7 @@ const MM1 = () => {
         
     }
 
-
+    console.log(data);
 
     
   return (
